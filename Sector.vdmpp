@@ -1,10 +1,15 @@
-class User
+class Sector
+/*
+	Define a class Sector
+*/
+
 types
+public RoomName = seq of char;
+
 values
 -- TODO Define values here
 instance variables
-private name:seq of char;
-private profession:seq of char;
+private name: seq of RoomName;
 
 operations
 -- TODO Define operations here
@@ -12,4 +17,4 @@ functions
 -- TODO Define functiones here
 traces
 -- TODO Define Combinatorial Test Traces here
-end User
+end Sector
