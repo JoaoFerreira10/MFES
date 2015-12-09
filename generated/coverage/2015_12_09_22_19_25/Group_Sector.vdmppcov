@@ -1,21 +1,17 @@
-class Sector
-/*
-	Define a class Sector
-*/
-
+class Group_Sector
 types
-public SectorName = seq of char;
-public RoomName = seq of char;
+/*public Sectors = seq of Sector;*/
+
+
 
 values
 -- TODO Define values here
 instance variables
-private name: seq of RoomName;
-
+private sectors : seq of Sector := [];
 operations
 -- TODO Define operations here
 functions
 -- TODO Define functiones here
 traces
 -- TODO Define Combinatorial Test Traces here
-end Sector
+end Group_Sector

@@ -4,7 +4,6 @@ class Sector
 */
 
 types
-public SectorName = seq of char;
 public RoomName = seq of char;
 
 values

@@ -1,0 +1,25 @@
+class Test is subclass of MyTestCase
+
+operations  
+
+  public testUser: () ==> ()
+  testUser() == (
+  	dcl p: User := new User("Luis", "Estudante");
+  	assertEqual("Luis", p.getUserName());
+  );
+  
+  public testGroup_User: () ==> ()
+  testGroup_User() == (
+  	dcl p: Group_User := new Group_User("Estudantes");
+  	assertEqual("Eudantes", p.getGroupName());
+  );
+
+  
+   
+  public testAll: () ==> ()
+  testAll() == (
+   testUser();
+   testGroup_User();
+  );
+  
+end Test

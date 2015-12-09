@@ -1,21 +1,14 @@
-class Sector
-/*
-	Define a class Sector
-*/
-
+class Rules
 types
-public SectorName = seq of char;
-public RoomName = seq of char;
-
+-- TODO Define types here
 values
 -- TODO Define values here
 instance variables
-private name: seq of RoomName;
-
+private description:seq of char;
 operations
 -- TODO Define operations here
 functions
 -- TODO Define functiones here
 traces
 -- TODO Define Combinatorial Test Traces here
-end Sector
+end Rules

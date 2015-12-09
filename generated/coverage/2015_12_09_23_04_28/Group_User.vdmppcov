@@ -1,0 +1,32 @@
+class Group_User
+types
+public GroupName = seq of char;
+
+
+
+values
+-- TODO Define values here
+instance variables
+private name: GroupName;
+private users : seq of User :=[];
+
+operations
+public Group_User : GroupName ==> Group_User   /* > create a := new User("luis","trolha"); >print a*/
+Group_User(gn) == (
+	name := gn;
+	return self 
+	);
+	
+public addUser : User ==> ()
+addUser(add) ==
+users:= [add] ^ users
+post users = [add]^users~;
+
+pure public getGroupName: () ==> GroupName
+getGroupName() == return name;
+
+functions
+-- TODO Define functiones here
+traces
+-- TODO Define Combinatorial Test Traces here
+end Group_User
