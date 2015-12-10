@@ -28,3 +28,11 @@ functions
 traces
 -- TODO Define Combinatorial Test Traces here
 end User
+
+/* TODO
+
+adicionar array de sector
+adicionar array de group_sector
+criar funçao : adicionar setor ao user
+
+*/

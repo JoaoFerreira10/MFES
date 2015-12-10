@@ -15,3 +15,11 @@ functions
 traces
 -- TODO Define Combinatorial Test Traces here
 end Group_Sector
+
+
+/* TODO
+
+adicionar array de regras 
+criar funçao : adicionar regra ao setor
+
+*/

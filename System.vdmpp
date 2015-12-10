@@ -7,9 +7,29 @@ instance variables
 private group_users : seq of Group_User := [];
 private group_sectors : seq of Group_Sector := [];
 operations
--- TODO Define operations here
+ 
+
+
+
 functions
 -- TODO Define functiones here
 traces
 -- TODO Define Combinatorial Test Traces here
 end System
+
+
+
+/* TODO 
+addRuleSector(sector, regra)    
+addRuleGroupSector(sectorGroup, regra)
+
+addSector_toUser (setor, user)
+addGroupsector_toUser (gourp, user)
+
+addSector_toGroupUser (setor, user)
+addGroupsector_toGroupUser (gourp, user)
+
+
+
+*/
+ 

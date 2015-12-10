@@ -10,12 +10,36 @@ public RoomName = seq of char;
 values
 -- TODO Define values here
 instance variables
-private name: seq of RoomName;
+private room_name: seq of RoomName :=[];  /*array de salas*/
+private sector_name: SectorName;
 
 operations
--- TODO Define operations here
+public Sector : SectorName ==> Sector   /* > create a := new User("luis","trolha"); >print a*/
+Sector(sn) == (
+	sector_name := sn;
+	return self 
+	);
+	
+pure public getSectorName: () ==> SectorName
+getSectorName() == return sector_name;
+
+public addRoom : RoomName ==> ()
+addRoom(add) ==
+room_name:= [add] ^ room_name
+post room_name = [add]^room_name~;
+
+
+
 functions
 -- TODO Define functiones here
 traces
 -- TODO Define Combinatorial Test Traces here
 end Sector
+
+
+/* TODO
+
+adicionar array de regras 
+criar funçao : adicionar regra ao setor
+
+*/
