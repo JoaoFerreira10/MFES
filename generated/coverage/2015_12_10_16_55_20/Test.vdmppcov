@@ -1,0 +1,47 @@
+class Test is subclass of MyTestCase
+
+operations  
+
+  public testUser: () ==> ()
+  testUser() == (
+  	dcl p: User := new User("Luis", "Estudante");
+  	assertEqual("Luis", p.getUserName());
+  );
+  
+  public testGroup_User: () ==> ()
+  testGroup_User() == (
+  	dcl p: Group_User := new Group_User("Estudantes");
+  	assertEqual("Estudantes", p.getGroupName());
+  );
+  
+   public testRoom: () ==> ()
+  testRoom() == (
+  	dcl p: Room := new Room("i003");
+  	assertEqual("i003", p.getRoomName());
+  );
+  
+  public testSector: () ==> ()
+  testSector() == (
+  	dcl p: Sector := new Sector("dei");
+  	assertEqual("dei", p.getSectorName());
+  );
+  
+   public testAddRoomToSector: () ==> ()
+  testAddRoomToSector() == (
+  	dcl s: Sector := new Sector("dei");
+  	dcl r: Room := new Room("i003");
+  	s.addRoom(r);
+  );
+  
+
+  
+   
+  public testAll: () ==> ()
+  testAll() == (
+   testUser();
+   testGroup_User();
+   testRoom();
+   testSector();
+  );
+  
+end Test

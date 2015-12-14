@@ -1,0 +1,125 @@
+class System
+
+types
+
+public User :: name: seq of char;
+public Sector :: name: seq of char;
+
+	groupUser = set of User;
+	groupSector = set of Sector;
+
+
+values
+-- TODO Define values here
+instance variables
+/*
+private group_users : seq of Group_User := [];
+private group_sectors : seq of Group_Sector := [];
+private rules : seq of Rules :=[];
+private name : InstitutionName;*/
+
+system: seq of char;
+
+	users: set of User := {};
+	
+	group_users: map seq of char to groupUser := {|->};
+	
+	/* facilities as a set of Facility */
+	sectors: set of Sector := {};
+	/* groupfacilities as a map of String to GroupFacility */
+	group_sector: map seq of char to groupSector := {|->};
+
+
+	cards: set of Card := {};
+	cardUser: map Card to User := {|->};
+	
+	cardId: nat := 0;
+
+operations
+
+/*
+public System : InstitutionName ==> System   
+System(sys) == (
+	name := sys;
+	return self 
+	);*/
+ 
+ public System: seq of char ==> System  /* create s := new System("sys") */
+	System(sys) == (
+		system := sys;
+		return self;
+	);
+	
+	public createCard: () ==> Card  /*  create c := s.createCard() **/
+	createCard() == (
+		cardId := cardId + 1;
+		let c: Card = new Card(cardId) in (
+			cards := cards union {c};
+			return c;
+		);
+	);
+	
+	
+	public createUser : seq of char ==> User  /* create user := s.createUser("luis")*/
+	createUser(name) == (
+		let user = mk_User(name) in (
+			group_users := group_users munion { name |-> { user } };
+			users := users union {user};
+			return user;
+		);
+	)
+	pre let u = mk_User(name) in u not in set users;
+	
+		public cardToUser: Card * User ==> ()   /*  print s.cardToUser(c,user)  */
+			cardToUser(c, user) == (
+		cardUser := cardUser munion { c |-> user };
+	) pre c in set cards and
+				user in set users and
+				user not in set rng cardUser and 
+				c not in set dom cardUser;
+				
+	public createGroupUser : seq of char ==> ()  /* print s.createGroupUser("estudantes") */
+	createGroupUser(name) == (
+		group_users := group_users munion { name |-> { } };
+	)
+	pre not name in set dom group_users
+	post name in set dom group_users;
+	
+	
+	public userToGroupUser : seq of char * User ==> ()  /* print s.userToGroupUser("estudantes",user) */
+		userToGroupUser(groupUser, user) == (
+		group_users(groupUser) := group_users(groupUser) union { user };
+	)
+	pre groupUser in set dom group_users 
+	and user in set users
+	post user in set group_users(groupUser);
+ 
+ /*
+pure public getGroupUser: () ==> seq of Group_User
+getGroupUser() == return group_users;
+*/
+/* getRules(sys)*/
+
+
+functions
+-- TODO Define functiones here
+traces
+-- TODO Define Combinatorial Test Traces here
+end System
+
+
+
+/* TODO 
+addRuleSector(sector, regra)    
+addRuleGroupSector(sectorGroup, regra)
+
+addSector_toUser (setor, user)
+addGroupsector_toUser (gourp, user)
+
+addSector_toGroupUser (setor, user)
+addGroupsector_toGroupUser (gourp, user)
+
+
+
+*/
+ 
