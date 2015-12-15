@@ -2,12 +2,140 @@ class Test is subclass of MyTestCase
 
 operations  
 
-  /*public testUser: () ==> ()
-  testUser() == (
-  	dcl p: User := new User("Luis", "Estudante");
-  	assertEqual("Luis", p.getUserName());
+  -- Requisito 1 : gerir o sistema , criar sistema, users, sectores, cartoes
+	public testSystem: () ==> ()
+  testSystem() == (
+  	dcl s: System := new System("sys");
+  	dcl user: User := s.createUser("luis");
+  	dcl c: Card := s.createCard();
+  	dcl sector: Sector := s.createSector("dei");
+  	dcl rule : Rules := new Rules(<allow>,"estudantes","feup");	
+  	dcl gr : seq of char;
+  	dcl grs : seq of char;	
+  	gr := s.createGroup_User("estudantes");
+  	grs := s.createGroup_Sector("feup");
+  	
+  	assertEqual("sys", s.getSystem());
+  	assertEqual("luis", user.getUserName());
+  	assertEqual("dei", sector.getSectorName());
+  	IO`println(s);
+  	IO`print("regras: ");
+  	IO`println(rule);
+  	--assertEqual(1, c.getCardId());
   );
-  */
+
+
+
+  public testUser: () ==> ()
+  testUser() == (
+  	dcl s: System := new System("sys");
+  	dcl user: User := s.createUser("luis");
+  	assertEqual("luis", user.getUserName());
+  	IO`println(s);
+  );
+  
+  	-- Requisito 2 : associar utilizadores a grupo de utilizadores
+  
+   public testUserToGroupUser: () ==> ()
+  testUserToGroupUser() == (
+  	dcl s: System := new System("sys");
+  	dcl user: User := s.createUser("luis");
+  	dcl gr : seq of char;
+  	
+  	gr := s.createGroup_User("estudantes");
+  	s.userToGroupUser(gr,user);
+  	assertEqual("luis", user.getUserName());
+  	IO`println(s);
+  	
+  	IO`print("grupo de utilizadores: ");
+  	IO`println(gr);
+  	IO`print("utilizadores: "); IO`println(user);
+  	--assertEqual("luis", user.getUserName());
+  );
+  
+  -- Requisito 3 - associar um setor a um grupo de setores
+  
+   public testSectorToGroupSector: () ==> ()
+  testSectorToGroupSector() == (
+  	dcl s: System := new System("sys");
+  	dcl sector: Sector := s.createSector("dei");
+  	dcl grs : seq of char;
+  	
+  	grs := s.createGroup_Sector("feup");
+  	s.sectorToGroupSector(grs,sector);
+  	assertEqual("dei", sector.getSectorName());
+  	IO`println(s);
+  	
+  	IO`print("grupo de sectores: ");
+  	IO`println(grs);
+  	IO`print("sectores: "); IO`println(sector);
+ 
+  );
+  
+  -- Requisito 5: associar cartão a utilizador
+  
+  public testCardToUser: () ==> ()
+  	testCardToUser() == (
+  	dcl s: System := new System("sys");
+  	dcl user: User := s.createUser("luis");
+  	dcl c: Card := s.createCard();
+  	s.cardToUser(c,user);
+    assertEqual("luis", user.getUserName());
+  	IO`println(s);
+  	IO`println(c);
+  );
+  
+  
+  -- Requisito 6: cria ponto de acesso e associar-lhe uma regra
+  
+  public testRuleToAccessPoint: () ==> ()
+  	testRuleToAccessPoint() == (
+  	dcl s: System := new System("sys"); 	
+  	dcl rule : Rules := new Rules(<allow>,"estudantes","feup");	
+  	dcl gr : seq of char;
+  	dcl grs : seq of char;	
+  	dcl sector: Sector := s.createSector("dei");
+  	dcl acc : AccessPoint := s.createAccessPoint(sector);	
+  	
+  	gr := s.createGroup_User("estudantes");
+  	grs := s.createGroup_Sector("feup");
+ 
+  	s.accessRuleToAccessPoint(acc,rule);
+  	IO`println(s);
+
+  );
+  
+  
+   public testRequestAccess: () ==> ()
+  	testRequestAccess() == (
+  	dcl s: System := new System("sys"); 	
+  	dcl rule : Rules := new Rules(<allow>,"estudantes","feup");	
+  	dcl gr : seq of char;
+  	dcl grs : seq of char;	
+  	dcl sector: Sector := s.createSector("dei");
+  	dcl user: User := s.createUser("luis");
+  	dcl acc : AccessPoint := s.createAccessPoint(sector);	
+  	dcl c: Card := s.createCard();
+  	gr := s.createGroup_User("estudantes");
+  	grs := s.createGroup_Sector("feup");
+ 		s.cardToUser(c,user);
+  	s.accessRuleToAccessPoint(acc,rule);
+  	s.accessRequest(c,acc);
+  	
+  	IO`println(s);
+
+  );
+  
+  
+ /* public testCard: () ==> ()
+  testCard() == (
+  	dcl s: System := new System("sys");
+  	dcl c: Card := s.createCard();
+  	--assertEqual("1", c.getCardId());
+  );*/
+  
+  /*create s := new System("sys")
+  	let user: PhysicalAccessControlSystem`User = pacs.createNewUser("Miguel")*/
  /* public testGroup_User: () ==> ()
   testGroup_User() == (
   	dcl p: Group_User := new Group_User("Estudantes");
@@ -36,15 +164,21 @@ operations
   );*/
   
 
-  /*
+  
    
   public testAll: () ==> ()
   testAll() == (
    testUser();
-   testGroup_User();
+   testSystem();
+   testUserToGroupUser();
+   testSectorToGroupSector();
+   testCardToUser();
+   testRuleToAccessPoint();
+   --testCard();
+  /* testGroup_User();
    testRoom();
-   testSector();
-   /*testAddRoomToSector();
-  );*/
+   testSector();*/
+ 
+  );
   
 end Test

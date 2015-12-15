@@ -1,0 +1,136 @@
+class Test is subclass of MyTestCase
+
+operations  
+
+  -- Requisito 1 : gerir o sistema , criar sistema, users, sectores, cartoes
+	public testSystem: () ==> ()
+  testSystem() == (
+  	dcl s: System := new System("sys");
+  	dcl user: User := s.createUser("luis");
+  	dcl c: Card := s.createCard();
+  	dcl sector: Sector := s.createSector("dei");
+  	assertEqual("sys", s.getSystem());
+  	assertEqual("luis", user.getUserName());
+  	assertEqual("dei", sector.getSectorName());
+  	IO`println(s);
+  	--assertEqual(1, c.getCardId());
+  );
+
+
+
+  public testUser: () ==> ()
+  testUser() == (
+  	dcl s: System := new System("sys");
+  	dcl user: User := s.createUser("luis");
+  	assertEqual("luis", user.getUserName());
+  	IO`println(s);
+  );
+  
+  	-- Requisito 2 : associar utilizadores a grupo de utilizadores
+  
+   public testUserToGroupUser: () ==> ()
+  testUserToGroupUser() == (
+  	dcl s: System := new System("sys");
+  	dcl user: User := s.createUser("luis");
+  	dcl gr : seq of char;
+  	
+  	gr := s.createGroup_User("estudantes");
+  	s.userToGroupUser(gr,user);
+  	assertEqual("luis", user.getUserName());
+  	IO`println(s);
+  	
+  	IO`print("grupo de utilizadores: ");
+  	IO`println(gr);
+  	IO`print("utilizadores: "); IO`println(user);
+  	--assertEqual("luis", user.getUserName());
+  );
+  
+  -- Requisito 3 - associar um setor a um grupo de setores
+  
+   public testSectorToGroupSector: () ==> ()
+  testSectorToGroupSector() == (
+  	dcl s: System := new System("sys");
+  	dcl sector: Sector := s.createSector("dei");
+  	dcl grs : seq of char;
+  	
+  	grs := s.createGroup_Sector("feup");
+  	s.sectorToGroupSector(grs,sector);
+  	assertEqual("dei", sector.getSectorName());
+  	IO`println(s);
+  	
+  	IO`print("grupo de sectores: ");
+  	IO`println(grs);
+  	IO`print("sectores: "); IO`println(sector);
+ 
+  );
+  
+  -- Requisito 4: associar cartão a utilizador
+  
+  public testCardToUser: () ==> ()
+  	testCardToUser() == (
+  	dcl s: System := new System("sys");
+  	dcl user: User := s.createUser("luis");
+  	dcl c: Card := s.createCard();
+  	s.cardToUser(c,user);
+    assertEqual("luis", user.getUserName());
+  	IO`println(s);
+  	IO`println(c);
+
+ 
+  );
+  
+  
+ /* public testCard: () ==> ()
+  testCard() == (
+  	dcl s: System := new System("sys");
+  	dcl c: Card := s.createCard();
+  	--assertEqual("1", c.getCardId());
+  );*/
+  
+  /*create s := new System("sys")
+  	let user: PhysicalAccessControlSystem`User = pacs.createNewUser("Miguel")*/
+ /* public testGroup_User: () ==> ()
+  testGroup_User() == (
+  	dcl p: Group_User := new Group_User("Estudantes");
+  	assertEqual("Estudantes", p.getGroupName());
+  );*/
+  
+  /* public testRoom: () ==> ()
+  testRoom() == (
+  	dcl p: Room := new Room("i003");
+  	assertEqual("i003", p.getRoomName());
+  );
+  
+  public testSector: () ==> ()
+  testSector() == (
+  	dcl p: Sector := new Sector("dei");
+  	assertEqual("dei", p.getSectorName());
+  );*/
+  
+ /*
+   public testAddRoomToSector: () ==> ()
+  testAddRoomToSector() == (
+  	dcl s: Sector := new Sector("dei");
+  	dcl r: Room := new Room("i003");
+  	s.addRoom(r);
+  	assertEqual("i003", s.getRoomAdded());
+  );*/
+  
+
+  
+   
+  public testAll: () ==> ()
+  testAll() == (
+   testUser();
+   testSystem();
+   testUserToGroupUser();
+   testSectorToGroupSector();
+   testCardToUser();
+   --testCard();
+  /* testGroup_User();
+   testRoom();
+   testSector();*/
+ 
+  );
+  
+end Test

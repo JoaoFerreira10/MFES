@@ -1,0 +1,68 @@
+class Sector
+/*
+	Define a class Sector
+*/
+
+types
+public SectorName = seq of char;
+
+
+values
+-- TODO Define values here
+instance variables
+private sector_name: SectorName;
+
+operations
+public Sector : SectorName ==> Sector  
+Sector(sn) == (
+	sector_name := sn;
+	return self 
+	);
+	
+pure public getSectorName: () ==> SectorName
+getSectorName() == return sector_name;
+
+
+
+/*
+  public getRoomAdded: () ==> ()
+                getRoomAdded() == return hd rooms
+                pre rooms <> []
+                post RESULT = hd rooms;*/
+/*
+public addRule_to_Sector : Rules ==> ()
+addRule_to_Sector(add) ==
+rules:= [add] ^ rules
+post rules = [add]^rules~;*/
+
+functions
+-- TODO Define functiones here
+traces
+-- TODO Define Combinatorial Test Traces here
+end Sector
+
+
+/* TODO
+
+adicionar array de regras  XXX
+criar funçao : adicionar regra ao setor  XXX
+
+*/
+
+/*
+> create r := new Room("i004")
+> print r
+Room{#2, name:="i004"}
+> create r1 := new Room("i003")
+> print r1
+Room{#3, name:="i003"}
+> create s := new Sector("dei")
+
+> print s.addRoom(r)
+()
+> print s.addRoom(r1)
+()
+> print s
+Sector{#4, rooms:=[Room{#3, name:="i003"}, Room{#2, name:="i004"}], sector_name:="dei"}
+> 
+*/

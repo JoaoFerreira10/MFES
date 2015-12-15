@@ -1,0 +1,255 @@
+class System
+
+types
+
+public Group_User = seq of char;
+public Group_Sector = seq of char;
+
+	group_user = set of User;
+	group_sector = set of Sector;
+
+
+values
+-- TODO Define values here
+instance variables
+
+	/* accessPolities tem um seq of Rules ... seq : coleçao de elementos ordenada de um tipo indexado */
+
+
+	system: seq of char;
+
+	users: set of User := {};
+	sectors: set of Sector := {};
+	
+	group_users: map seq of char to group_user := {|->};  /* name(estudantes) -> user , user1 ; user -> user */
+	group_sectors: map seq of char to group_sector := {|->};
+	
+	accessPointRules : map AccessPoint to seq of Rules := {|->}; 
+	
+
+	
+	
+	cards: set of Card := {};
+	cardUser: map Card to User := {|->};
+	
+	cardId: nat := 0;
+	accessPointId: nat := 0;
+	
+	/*inv not exists u,u1 in set users & u <> u1;*/
+	inv forall u in set users & forall u1 in set users \ {u} & u1.getUserName() <> u.getUserName();  /* não deixa criar um user novo com o mesmo nome */
+	inv forall s in set sectors & forall s1 in set sectors \ {s} & s1.getSectorName() <> s.getSectorName()  /* não deixa criar um sector novo com o mesmo nome */
+
+
+operations
+
+/*
+public System : InstitutionName ==> System   
+System(sys) == (
+	name := sys;
+	return self 
+	);*/
+ 
+ 	public static assertTrue: bool ==> ()
+	assertTrue(cond) == assertEqual(cond, true);
+	
+		public static assertEqual: ? * ? ==> ()
+	assertEqual(expected, actual) == 
+	if expected <> actual then (
+		IO`print("Actual value (");
+		IO`print(actual); 
+		IO`print(") different from expected (");
+		IO`print(expected);
+		IO`println(")\n")
+	)
+	post expected = actual;
+ 
+ public System: seq of char ==> System  /* create s := new System("sys") */
+	System(sys) == (
+		system := sys;
+		return self;
+	);
+	
+	public createCard: () ==> Card  /*  create c := s.createCard() **/
+	createCard() == (
+		cardId := cardId + 1;
+		let c: Card = new Card(cardId) in (
+			cards := cards union {c};
+			return c;
+		);
+	);
+	
+	public createUser: seq of char  ==> User /* create user := s.createUser("luis") */
+	createUser(name) == (
+		let u: User = new User(name) in (
+			users := users union {u};
+			group_users := group_users munion { name |-> { u } }; /* adiciona o utilizador ao grupo de users*/
+			return u;
+		);
+	);
+		/*pre let u2 : User = createUser(name) in u2 not in set users;*/
+
+	public cardToUser: Card * User ==> ()   /*  print s.cardToUser(c,user)  */
+			cardToUser(c, user) == (
+		cardUser := cardUser munion { c |-> user };   /*  map union */
+	) pre c in set cards and
+				user in set users and
+				user not in set rng cardUser and   /* rng(range): o que ta do lado direito (user)   */ 
+				c not in set dom cardUser;        /*   dom(dominio): lado esquerdo (cartao) . verifica se o cartao nao ta no dominio */
+		
+
+		
+		/*pre let u = mk_User(name) in u not in set users;*/
+	public createGroup_User : Group_User ==> Group_User   /* create gr := s.createGroup_User("estudantes") */
+	createGroup_User(name) == (		
+	let gr: Group_User = (name) in (						    
+		group_users := group_users munion { name |-> { } };
+		return gr;
+		);
+		)
+	pre not name in set dom group_users
+	post name in set dom group_users;
+	
+		public userToGroupUser : Group_User * User ==> ()  /* print s.userToGroupUser(gr,user) */ 
+			userToGroupUser(gr, user) == (										
+			group_users(gr) := group_users(gr) union { user };
+		)
+		pre gr in set dom group_users 
+		and user in set users
+		post user in set group_users(gr);
+
+	
+	public createSector: seq of char  ==> Sector /* create sector := s.createSector("dei") */
+	createSector(name) == (
+		let s: Sector = new Sector(name) in (
+			sectors := sectors union {s};
+			group_sectors := group_sectors munion { name |-> { s } }; /* adiciona o utilizador ao grupo de users*/
+			return s;
+		);
+	);
+	
+		public createGroup_Sector : Group_Sector ==> Group_Sector   /* create grsec := s.createGroup_Sector("feup") */
+	createGroup_Sector(name) == (		
+	let sc: Group_Sector = (name) in (						    
+		group_sectors := group_sectors munion { name |-> { } };
+		return sc;
+		);
+		)
+	pre not name in set dom group_sectors
+	post name in set dom group_sectors;
+	
+	
+	public sectorToGroupSector : Group_Sector * Sector ==> ()  /* print s.sectorToGroupSector(grsec,sector) */ 
+			sectorToGroupSector(grsec, sector) == (										
+			group_sectors(grsec) := group_sectors(grsec) union { sector };
+		)
+		pre grsec in set dom group_sectors 
+		and sector in set sectors
+		post sector in set group_sectors(grsec);
+	
+
+
+		public createAccessPoint: Sector ==> AccessPoint  /*  create acc := s.createAccessPoint(sector) */
+	createAccessPoint(sector) == (
+		accessPointId := accessPointId + 1;
+		let ap: AccessPoint = new AccessPoint(accessPointId, sector) in (
+			accessPointRules := accessPointRules munion { ap |-> [] };  /* um accessPoint (key) tem uma rule  */
+			return ap;
+		);
+	)
+	pre sector in set sectors;
+	
+	
+	
+		public accessRuleToAccessPoint: AccessPoint * Rules ==> ()
+	accessRuleToAccessPoint(ap, ar) == (
+		accessPointRules(ap) := accessPointRules(ap) ^ [ ar ] 
+	)
+	pre ar.group_User in set dom group_users and ar.group_Sector in set dom group_sectors;  /* verifica se existe o grupo_user e grupo_sector */
+	
+
+		private accessRequest : Card * AccessPoint ==> (bool * seq of char * seq of char)
+		accessRequest(crd, acP) == (
+		if not crd in set dom cardUser then return mk_(false, "Utilizador inexistente", "cartão nao associado ao utilizador");
+		let user: User = cardUser(crd),
+			  rules: seq of Rules = accessPointRules(acP),
+			  validIndices: set of nat1 = { i | 
+					i in set inds rules & 
+						user in set group_users(rules(i).getGroup_User()) and 
+						acP.getSector() in set group_sectors(rules(i).getGroup_Sector()) 
+				} in 
+		(
+			if card validIndices = 0 or rules(Rules`maxIndex(validIndices)).getRequest() = <deny>
+			then return mk_(false, user.getUserName(), "utilizador nao autorizado")
+			else return mk_(true, user.getUserName(), "utilizador autorizado")
+		)
+	);
+	
+/*	public accessRequest1 : Card * AccessPoint ==> bool
+	accessRequest1(crd, accessPoint) == (
+		let result = accessRequest(crd, accessPoint) in (
+			if result.#1
+			then log("Access granted to " ^ accessPoint.getSector().Sector ^ " for " ^ result.#2 ^ ".")
+			else log("Access denied to " ^ accessPoint.getSector().Sector ^ " for " ^ result.#2 ^ ": " ^ result.#3 ^ ".");
+			then log();
+			return result.#1;
+		);
+	);*/
+	
+	/*
+		public cardToUser: Card * User ==> ()     print s.cardToUser(c,user)  
+			cardToUser(c, user) == (
+		cardUser := cardUser munion { c |-> user };     map union 
+	) pre c in set cards and
+				user in set users and
+				user not in set rng cardUser and    rng(range): o que ta do lado direito (user)    
+				c not in set dom cardUser;           dom(dominio): lado esquerdo (cartao) . verifica se o cartao nao ta no dominio 
+		*/
+				
+				/*
+	public createGroupUser : seq of char ==> ()   print s.createGroupUser("estudantes") 
+	createGroupUser(name) == (										 create grupouser := s.createGroupUser("estudantes")   
+		group_users := group_users munion { name |-> { } };
+	)
+	pre not name in set dom group_users
+	post name in set dom group_users;
+	
+	*/
+	
+	/*
+	public userToGroupUser : seq of char * User ==> ()   print s.userToGroupUser("estudantes",user) 
+		userToGroupUser(groupUser, user) == (										
+		group_users(groupUser) := group_users(groupUser) union { user };
+	)
+	pre groupUser in set dom group_users 
+	and user in set users
+	post user in set group_users(groupUser);
+ */
+ /*
+pure public getGroupUser: () ==> seq of Group_User
+getGroupUser() == return group_users;
+*/
+/* getRules(sys)*/
+
+
+functions
+-- TODO Define functiones here
+traces
+-- TODO Define Combinatorial Test Traces here
+end System
+
+
+
+/* TODO 
+addRuleSector(sector, regra)    
+addRuleGroupSector(sectorGroup, regra)
+
+addSector_toUser (setor, user)
+addGroupsector_toUser (gourp, user)
+
+addSector_toGroupUser (setor, user)
+addGroupsector_toGroupUser (gourp, user)
+
+
+
+*/
+ 

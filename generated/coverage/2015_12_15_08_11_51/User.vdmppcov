@@ -1,0 +1,35 @@
+class User
+types
+
+public UserName = seq of char;
+
+values
+-- TODO Define values here
+instance variables
+private name: UserName;
+
+operations
+public User : UserName ==> User   /* > create a := new User("luis"); >print a*/
+User(un) == (
+	name := un;
+	return self 
+	);
+	
+pure public getUserName: () ==> UserName
+getUserName() == return name;
+
+
+
+functions
+-- TODO Define functiones here
+traces
+-- TODO Define Combinatorial Test Traces here
+end User
+
+/* TODO
+
+adicionar array de sector
+adicionar array de group_sector
+criar funçao : adicionar setor ao user
+
+*/

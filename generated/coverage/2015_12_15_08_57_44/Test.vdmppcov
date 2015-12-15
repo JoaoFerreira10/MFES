@@ -1,0 +1,95 @@
+class Test is subclass of MyTestCase
+
+operations  
+
+  -- Requerimento 1 : gerir o sistema , criar sistema, users, sectores, cartoes
+	public testSystem: () ==> ()
+  testSystem() == (
+  	dcl s: System := new System("sys");
+  	dcl user: User := s.createUser("luis");
+  	dcl c: Card := s.createCard();
+  	dcl sector: Sector := s.createSector("dei");
+  	assertEqual("sys", s.getSystem());
+  	assertEqual("luis", user.getUserName());
+  	assertEqual("dei", sector.getSectorName());
+  	IO`println(s);
+  	--assertEqual(1, c.getCardId());
+  );
+
+  public testUser: () ==> ()
+  testUser() == (
+  	dcl s: System := new System("sys");
+  	dcl user: User := s.createUser("luis");
+  	assertEqual("luis", user.getUserName());
+  	IO`println(s);
+  );
+  
+   public testUserToGroupUser: () ==> ()
+  testUserToGroupUser() == (
+  	dcl s: System := new System("sys");
+  	dcl user: User := s.createUser("luis");
+  	dcl gr : seq of char;
+  	
+  	gr := s.createGroup_User("estudantes");
+  	s.userToGroupUser(gr,user);
+  	assertEqual("luis", user.getUserName());
+  	IO`println(s);
+  	
+  	IO`print("grupo de utilizadores: ");
+  	IO`println(gr);
+  	IO`println(user);
+  	--assertEqual("luis", user.getUserName());
+  );
+  
+ /* public testCard: () ==> ()
+  testCard() == (
+  	dcl s: System := new System("sys");
+  	dcl c: Card := s.createCard();
+  	--assertEqual("1", c.getCardId());
+  );*/
+  
+  /*create s := new System("sys")
+  	let user: PhysicalAccessControlSystem`User = pacs.createNewUser("Miguel")*/
+ /* public testGroup_User: () ==> ()
+  testGroup_User() == (
+  	dcl p: Group_User := new Group_User("Estudantes");
+  	assertEqual("Estudantes", p.getGroupName());
+  );*/
+  
+  /* public testRoom: () ==> ()
+  testRoom() == (
+  	dcl p: Room := new Room("i003");
+  	assertEqual("i003", p.getRoomName());
+  );
+  
+  public testSector: () ==> ()
+  testSector() == (
+  	dcl p: Sector := new Sector("dei");
+  	assertEqual("dei", p.getSectorName());
+  );*/
+  
+ /*
+   public testAddRoomToSector: () ==> ()
+  testAddRoomToSector() == (
+  	dcl s: Sector := new Sector("dei");
+  	dcl r: Room := new Room("i003");
+  	s.addRoom(r);
+  	assertEqual("i003", s.getRoomAdded());
+  );*/
+  
+
+  
+   
+  public testAll: () ==> ()
+  testAll() == (
+   testUser();
+   testSystem();
+   testUserToGroupUser();
+   --testCard();
+  /* testGroup_User();
+   testRoom();
+   testSector();*/
+ 
+  );
+  
+end Test
