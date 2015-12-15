@@ -2,19 +2,16 @@ class User
 types
 
 public UserName = seq of char;
-public UserProfession = seq of char;
 
 values
 -- TODO Define values here
 instance variables
 private name: UserName;
-private profession: UserProfession;
 
 operations
-public User : UserName * UserProfession ==> User   /* > create a := new User("luis","trolha"); >print a*/
-User(un, up) == (
+public User : UserName ==> User   /* > create a := new User("luis"); >print a*/
+User(un) == (
 	name := un;
-	profession := up;
 	return self 
 	);
 	

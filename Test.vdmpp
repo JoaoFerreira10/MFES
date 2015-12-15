@@ -2,19 +2,19 @@ class Test is subclass of MyTestCase
 
 operations  
 
-  public testUser: () ==> ()
+  /*public testUser: () ==> ()
   testUser() == (
   	dcl p: User := new User("Luis", "Estudante");
   	assertEqual("Luis", p.getUserName());
   );
-  
-  public testGroup_User: () ==> ()
+  */
+ /* public testGroup_User: () ==> ()
   testGroup_User() == (
   	dcl p: Group_User := new Group_User("Estudantes");
   	assertEqual("Estudantes", p.getGroupName());
-  );
+  );*/
   
-   public testRoom: () ==> ()
+  /* public testRoom: () ==> ()
   testRoom() == (
   	dcl p: Room := new Room("i003");
   	assertEqual("i003", p.getRoomName());
@@ -24,7 +24,7 @@ operations
   testSector() == (
   	dcl p: Sector := new Sector("dei");
   	assertEqual("dei", p.getSectorName());
-  );
+  );*/
   
  /*
    public testAddRoomToSector: () ==> ()
@@ -36,7 +36,7 @@ operations
   );*/
   
 
-  
+  /*
    
   public testAll: () ==> ()
   testAll() == (
@@ -44,7 +44,7 @@ operations
    testGroup_User();
    testRoom();
    testSector();
-   /*testAddRoomToSector();*/
-  );
+   /*testAddRoomToSector();
+  );*/
   
 end Test

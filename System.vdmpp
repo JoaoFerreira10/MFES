@@ -2,38 +2,43 @@ class System
 
 types
 
-public User :: name: seq of char;
-public Sector :: name: seq of char;
+public Group_User = seq of char;
+public Group_Sector = seq of char;
 
-	groupUser = set of User;
-	groupSector = set of Sector;
+	group_user = set of User;
+	group_sector = set of Sector;
 
 
 values
 -- TODO Define values here
 instance variables
-/*
-private group_users : seq of Group_User := [];
-private group_sectors : seq of Group_Sector := [];
-private rules : seq of Rules :=[];
-private name : InstitutionName;*/
 
-system: seq of char;
+	/* accessPolities tem um seq of Rules ... seq : coleçao de elementos ordenada de um tipo indexado */
+
+
+	system: seq of char;
 
 	users: set of User := {};
-	
-	group_users: map seq of char to groupUser := {|->};
-	
-	/* facilities as a set of Facility */
 	sectors: set of Sector := {};
-	/* groupfacilities as a map of String to GroupFacility */
-	group_sector: map seq of char to groupSector := {|->};
+	
+	group_users: map seq of char to group_user := {|->};  /* name(estudantes) -> user , user1 ; user -> user */
+	group_sectors: map seq of char to group_sector := {|->};
+	
+	accessPointRules : map AccessPoint to seq of Rules := {|->}; 
+	
 
-
+	
+	
 	cards: set of Card := {};
 	cardUser: map Card to User := {|->};
 	
 	cardId: nat := 0;
+	accessPointId: nat := 0;
+	
+	/*inv not exists u,u1 in set users & u <> u1;*/
+	inv forall u in set users & forall u1 in set users \ {u} & u1.getUserName() <> u.getUserName();  /* não deixa criar um user novo com o mesmo nome */
+	inv forall s in set sectors & forall s1 in set sectors \ {s} & s1.getSectorName() <> s.getSectorName()  /* não deixa criar um sector novo com o mesmo nome */
+
 
 operations
 
@@ -59,41 +64,144 @@ System(sys) == (
 		);
 	);
 	
-	
-	public createUser : seq of char ==> User  /* create user := s.createUser("luis") */
+	public createUser: seq of char  ==> User /* create user := s.createUser("luis") */
 	createUser(name) == (
-		let user = mk_User(name) in (
-			group_users := group_users munion { name |-> { user } };
-			users := users union {user};
-			return user;
+		let u: User = new User(name) in (
+			users := users union {u};
+			group_users := group_users munion { name |-> { u } }; /* adiciona o utilizador ao grupo de users*/
+			return u;
 		);
-	)
-	pre let u = mk_User(name) in u not in set users;
-	
-		public cardToUser: Card * User ==> ()   /*  print s.cardToUser(c,user)  */
+	);
+		/*pre let u2 : User = createUser(name) in u2 not in set users;*/
+
+	public cardToUser: Card * User ==> ()   /*  print s.cardToUser(c,user)  */
 			cardToUser(c, user) == (
-		cardUser := cardUser munion { c |-> user };    /* map union */
+		cardUser := cardUser munion { c |-> user };   /*  map union */
 	) pre c in set cards and
 				user in set users and
-				user not in set rng cardUser and    /* rng(range): o que ta do lado direito (user)   */ 
-				c not in set dom cardUser;          /* dom(dominio): lado esquerdo (cartao) . verifica se o cartao nao ta no dominio */
+				user not in set rng cardUser and   /* rng(range): o que ta do lado direito (user)   */ 
+				c not in set dom cardUser;        /*   dom(dominio): lado esquerdo (cartao) . verifica se o cartao nao ta no dominio */
+		
+
+		
+		/*pre let u = mk_User(name) in u not in set users;*/
+	public createGroup_User : Group_User ==> Group_User   /* create gr := s.createGroup_User("estudantes") */
+	createGroup_User(name) == (		
+	let gr: Group_User = (name) in (						    
+		group_users := group_users munion { name |-> { } };
+		return gr;
+		);
+		)
+	pre not name in set dom group_users
+	post name in set dom group_users;
+	
+		public userToGroupUser : Group_User * User ==> ()  /* print s.userToGroupUser(gr,user) */ 
+			userToGroupUser(gr, user) == (										
+			group_users(gr) := group_users(gr) union { user };
+		)
+		pre gr in set dom group_users 
+		and user in set users
+		post user in set group_users(gr);
+
+	
+	public createSector: seq of char  ==> Sector /* create sector := s.createSector("dei") */
+	createSector(name) == (
+		let s: Sector = new Sector(name) in (
+			sectors := sectors union {s};
+			group_sectors := group_sectors munion { name |-> { s } }; /* adiciona o utilizador ao grupo de users*/
+			return s;
+		);
+	);
+	
+		public createGroup_Sector : Group_Sector ==> Group_Sector   /* create grsec := s.createGroup_Sector("feup") */
+	createGroup_Sector(name) == (		
+	let sc: Group_Sector = (name) in (						    
+		group_sectors := group_sectors munion { name |-> { } };
+		return sc;
+		);
+		)
+	pre not name in set dom group_sectors
+	post name in set dom group_sectors;
+	
+	
+	public sectorToGroupSector : Group_Sector * Sector ==> ()  /* print s.sectorToGroupSector(grsec,sector) */ 
+			sectorToGroupSector(grsec, sector) == (										
+			group_sectors(grsec) := group_sectors(grsec) union { sector };
+		)
+		pre grsec in set dom group_sectors 
+		and sector in set sectors
+		post sector in set group_sectors(grsec);
+	
+
+
+		public createAccessPoint: Sector ==> AccessPoint  /*  create acc := s.createAccessPoint(sector) */
+	createAccessPoint(sector) == (
+		accessPointId := accessPointId + 1;
+		let ap: AccessPoint = new AccessPoint(accessPointId, sector) in (
+			accessPointRules := accessPointRules munion { ap |-> [] };  /* um accessPoint (key) tem uma rule  */
+			return ap;
+		);
+	)
+	pre sector in set sectors;
+	
+	
+	
+		public accessRuleToAccessPoint: AccessPoint * Rules ==> ()
+	accessRuleToAccessPoint(ap, ar) == (
+		accessPointRules(ap) := accessPointRules(ap) ^ [ ar ] 
+	)
+	pre ar.group_User in set dom group_users and ar.group_Sector in set dom group_sectors;  /* verifica se existe o grupo_user e grupo_sector */
+	
+/*
+		private accessRequest : AccessCard * AccessPoint * DateTime ==> (bool * Utils`String * Utils`String)
+	requestAccessImpl(ac, accessPoint, date) == (
+		if not ac in set dom accessCardUser then return mk_(false, "Uknown user", "access card is not associated with a user");
+		if not ac.isValid(date) then return mk_(false, accessCardUser(ac).name, "access card expired");
+		
+		let user: User = accessCardUser(ac),
+			  rules: seq of AccessRule = accessPolicies(accessPoint),
+			  validIndices: set of nat1 = { i | 
+					i in set inds rules & 
+						rules(i).isValid(date) and
+						user in set groupUsers(rules(i).getGroupUser()) and 
+						accessPoint.getFacility() in set groupFacilities(rules(i).getGroupFacility()) 
+				} in 
+		(
+			if card validIndices = 0 or rules(Utils`max(validIndices)).getRuleType() = <deny>
+			then return mk_(false, user.name, "user is not authorized")
+			else return mk_(true, user.name, "")
+		)
+	);*/
+	
+	/*
+		public cardToUser: Card * User ==> ()     print s.cardToUser(c,user)  
+			cardToUser(c, user) == (
+		cardUser := cardUser munion { c |-> user };     map union 
+	) pre c in set cards and
+				user in set users and
+				user not in set rng cardUser and    rng(range): o que ta do lado direito (user)    
+				c not in set dom cardUser;           dom(dominio): lado esquerdo (cartao) . verifica se o cartao nao ta no dominio 
+		*/
 				
-	public createGroupUser : seq of char ==> ()  /* print s.createGroupUser("estudantes") */
-	createGroupUser(name) == (
+				/*
+	public createGroupUser : seq of char ==> ()   print s.createGroupUser("estudantes") 
+	createGroupUser(name) == (										 create grupouser := s.createGroupUser("estudantes")   
 		group_users := group_users munion { name |-> { } };
 	)
 	pre not name in set dom group_users
 	post name in set dom group_users;
 	
+	*/
 	
-	public userToGroupUser : seq of char * User ==> ()  /* print s.userToGroupUser("estudantes",user) */
-		userToGroupUser(groupUser, user) == (
+	/*
+	public userToGroupUser : seq of char * User ==> ()   print s.userToGroupUser("estudantes",user) 
+		userToGroupUser(groupUser, user) == (										
 		group_users(groupUser) := group_users(groupUser) union { user };
 	)
 	pre groupUser in set dom group_users 
 	and user in set users
 	post user in set group_users(groupUser);
- 
+ */
  /*
 pure public getGroupUser: () ==> seq of Group_User
 getGroupUser() == return group_users;

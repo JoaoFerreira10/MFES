@@ -1,19 +1,25 @@
-class Card
+class AccessPoint
 types
 -- TODO Define types here
 values
 -- TODO Define values here
 instance variables
+
 id: nat;
+public sector: Sector;
+
 operations
-public Card : nat ==> Card
-	Card(idCard) == 
+
+public AccessPoint : nat * Sector ==> AccessPoint
+	AccessPoint(idAccess, sec) == 
 	(
-		id := idCard;
+		id := idAccess;
+		sector := sec;
 		return self;
 	);
+	
 functions
 -- TODO Define functiones here
 traces
 -- TODO Define Combinatorial Test Traces here
-end Card
+end AccessPoint

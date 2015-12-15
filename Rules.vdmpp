@@ -1,61 +1,31 @@
 class Rules
 types
-public DescriptionRule = seq of char;
-public GroupSector = seq of char;
-public GroupUser = seq of char;
+
+	public Request = <allow> | <deny>;
+	public Group_User = seq of char;
+	public Group_Sector = seq of char;
+
 values
 -- TODO Define values here
 instance variables
-/*private description: DescriptionRule;
-private sectors : seq of Sector :=[];
-private rooms : seq of Room :=[];*/
 
-private description: DescriptionRule;
-public groupSector: GroupSector;
-public groupUser: GroupUser;
+	requestBool: Request;
+	public group_User: Group_User;
+	public group_Sector: Group_Sector;
+
 
 
 operations
 
-public Rules : DescriptionRule * GroupSector * GroupUser==> Rules
-	Rules(desc, grsec, gruser) == (
-		description := desc;
-		groupSector := grsec;
-		groupUser := gruser;
+public Rules : Request * Group_User * Group_Sector ==> Rules
+	Rules(req, gr, gs) == (
+		requestBool := req;
+		group_User := gr;
+		group_Sector := gs;
 		return self;
 	);
 
-/*
-public Rules : DescriptionRule ==> Rules  
-Rules(ru) == (
-	description := ru;
-	
-	return self 
-	);*/
-	
-	/*
-public RulesRoom : DescriptionRule * Room ==> Rules   
-RulesRoom(ru, roo) == (
-	description := ru;
-	rooms := [roo]^rooms;
-	return self 
-	);*/
-/*	public Rules : DescriptionRule * Sector ==> Rules    
-Rules(ru, sec) == (
-	description := ru;
-	sectors := [sec]^sectors;
-	return self 
-	);*/
-	/*
-public addSector_to_rule : Sector ==> ()
-addSector_to_rule(add) ==
-sectors:= [add] ^ sectors
-post sectors = [add]^sectors~;
 
-public addRoom_to_rule : Room ==> ()
-addRoom_to_rule(add) ==
-rooms:= [add] ^ rooms
-post rooms = [add]^rooms~;*/
 
 functions
 -- TODO Define functiones here

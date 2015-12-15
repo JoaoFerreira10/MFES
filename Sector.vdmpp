@@ -11,10 +11,9 @@ values
 -- TODO Define values here
 instance variables
 private sector_name: SectorName;
-private rooms : seq of Room :=[];
 
 operations
-public Sector : SectorName ==> Sector   /* > create a := new User("luis","trolha"); >print a*/
+public Sector : SectorName ==> Sector  
 Sector(sn) == (
 	sector_name := sn;
 	return self 
@@ -23,10 +22,6 @@ Sector(sn) == (
 pure public getSectorName: () ==> SectorName
 getSectorName() == return sector_name;
 
-public addRoom : Room ==> ()
-addRoom(add) ==
-rooms:= [add] ^ rooms
-post rooms = [add]^rooms~;
 
 
 /*
