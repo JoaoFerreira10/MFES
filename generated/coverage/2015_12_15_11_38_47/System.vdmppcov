@@ -90,7 +90,7 @@ System(sys) == (
 		
 
 		
-		
+		/*pre let u = mk_User(name) in u not in set users;*/
 	public createGroup_User : Group_User ==> Group_User   /* create gr := s.createGroup_User("estudantes") */
 	createGroup_User(name) == (		
 	let gr: Group_User = (name) in (						    
