@@ -176,6 +176,51 @@ System(sys) == (
 		)
 	);
 	
+/*	public accessRequest1 : Card * AccessPoint ==> bool
+	accessRequest1(crd, accessPoint) == (
+		let result = accessRequest(crd, accessPoint) in (
+			if result.#1
+			then log("Access granted to " ^ accessPoint.getSector().Sector ^ " for " ^ result.#2 ^ ".")
+			else log("Access denied to " ^ accessPoint.getSector().Sector ^ " for " ^ result.#2 ^ ": " ^ result.#3 ^ ".");
+			then log();
+			return result.#1;
+		);
+	);*/
+	
+	/*
+		public cardToUser: Card * User ==> ()     print s.cardToUser(c,user)  
+			cardToUser(c, user) == (
+		cardUser := cardUser munion { c |-> user };     map union 
+	) pre c in set cards and
+				user in set users and
+				user not in set rng cardUser and    rng(range): o que ta do lado direito (user)    
+				c not in set dom cardUser;           dom(dominio): lado esquerdo (cartao) . verifica se o cartao nao ta no dominio 
+		*/
+				
+				/*
+	public createGroupUser : seq of char ==> ()   print s.createGroupUser("estudantes") 
+	createGroupUser(name) == (										 create grupouser := s.createGroupUser("estudantes")   
+		group_users := group_users munion { name |-> { } };
+	)
+	pre not name in set dom group_users
+	post name in set dom group_users;
+	
+	*/
+	
+	/*
+	public userToGroupUser : seq of char * User ==> ()   print s.userToGroupUser("estudantes",user) 
+		userToGroupUser(groupUser, user) == (										
+		group_users(groupUser) := group_users(groupUser) union { user };
+	)
+	pre groupUser in set dom group_users 
+	and user in set users
+	post user in set group_users(groupUser);
+ */
+ /*
+pure public getGroupUser: () ==> seq of Group_User
+getGroupUser() == return group_users;
+*/
+/* getRules(sys)*/
 
 
 functions
@@ -186,6 +231,15 @@ end System
 
 
 
+/* TODO 
+addRuleSector(sector, regra)    
+addRuleGroupSector(sectorGroup, regra)
+
+addSector_toUser (setor, user)
+addGroupsector_toUser (gourp, user)
+
+addSector_toGroupUser (setor, user)
+addGroupsector_toGroupUser (gourp, user)
 
 
 

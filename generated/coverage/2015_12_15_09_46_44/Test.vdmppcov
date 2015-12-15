@@ -105,10 +105,9 @@ operations
 
   );
   
-  -- Requisito R4: utilizador ter acesso a um setor
   
-   public testRequestAccessAllowed: () ==> ()
-  	testRequestAccessAllowed() == (
+   public testRequestAccess: () ==> ()
+  	testRequestAccess() == (
   	dcl s: System := new System("sys"); 	
   	dcl rule : Rules := new Rules(<allow>,"estudantes","feup");	
   	dcl gr : seq of char;
@@ -120,39 +119,14 @@ operations
   	gr := s.createGroup_User("estudantes");
   	grs := s.createGroup_Sector("feup");
  		s.cardToUser(c,user);
- 		s.userToGroupUser(gr,user);
- 		s.sectorToGroupSector(grs,sector);
   	s.accessRuleToAccessPoint(acc,rule);
-  	IO`println(s);
   	--s.accessRequest(c,acc);
-  	IO`println("Accesso ao dei:");
   	IO`println(s.accessRequest(c, acc));
+  	
+  	--IO`println(s);
 
   );
   
-    -- Requisito R7: utilizador não ter acesso a um setor
-  
-   public testRequestAccessDenied: () ==> ()
-  	testRequestAccessDenied() == (
-  	dcl s: System := new System("sys"); 	
-  	dcl rule : Rules := new Rules(<allow>,"professores","feup");	
-  	dcl gr : seq of char;
-  	dcl gr2 : seq of char;
-  	dcl grs : seq of char;	
-  	dcl sector: Sector := s.createSector("dei");
-  	dcl user: User := s.createUser("igor");
-  	dcl acc : AccessPoint := s.createAccessPoint(sector);	
-  	dcl c: Card := s.createCard();
-  	gr2 := s.createGroup_User("professores");
-  	gr := s.createGroup_User("estudantes");
-  	grs := s.createGroup_Sector("feup");
- 		s.cardToUser(c,user);
-  	s.accessRuleToAccessPoint(acc,rule);
-  	--s.accessRequest(c,acc);
-  	IO`println("acesso ao dei: ");
-  	IO`println(s.accessRequest(c, acc));
-
-  );
   
  /* public testCard: () ==> ()
   testCard() == (
@@ -200,10 +174,12 @@ operations
    testUserToGroupUser();
    testSectorToGroupSector();
    testCardToUser();
-   testRuleToAccessPoint(); 
-   testRequestAccessAllowed();
-    testRequestAccessDenied();
-  
+   testRuleToAccessPoint();
+   testRequestAccess();
+   --testCard();
+  /* testGroup_User();
+   testRoom();
+   testSector();*/
  
   );
   

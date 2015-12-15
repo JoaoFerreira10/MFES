@@ -1,0 +1,68 @@
+class Rules
+types
+
+	public Request = <allow> | <deny>;
+	public Group_User = seq of char;
+	public Group_Sector = seq of char;
+
+values
+-- TODO Define values here
+instance variables
+
+	requestBool: Request;
+	public group_User: Group_User;
+	public group_Sector: Group_Sector;
+
+
+
+operations
+
+public Rules : Request * Group_User * Group_Sector ==> Rules
+	Rules(req, gr, gs) == (
+		requestBool := req;
+		group_User := gr;
+		group_Sector := gs;
+		return self;
+	);
+
+	public getGroup_User : () ==> seq of char
+	getGroup_User() == return self.group_User;
+	
+	public getGroup_Sector : () ==> seq of char
+	getGroup_Sector() == return self.group_Sector;
+		
+	public getRequest : () ==> Request
+	getRequest() == return self.requestBool;
+	
+	
+	public static maxIndex : set of nat1 ==> nat1
+	maxIndex(s) == (
+		dcl maxElem: nat1 := 1;
+		
+		for all elem in set s do (
+			if maxElem < elem then maxElem := elem;
+		);
+		
+		return maxElem;
+	) pre s <> {};
+
+functions
+-- TODO Define functiones here
+traces
+-- TODO Define Combinatorial Test Traces here
+end Rules
+
+
+
+
+/* 
+> create s := new Sector("dei")
+> print s.addRoom("i003")
+()
+> print s
+Sector{#1, sector_name:="dei", room_name:=["i003"]}
+> create r := new Rules("acesso ao i",s)
+> print r
+Rules{#2, description:="acesso ao i", sectors:=[Sector{#1, sector_name:="dei", room_name:=["i003"]}]} 
+
+*/

@@ -149,7 +149,6 @@ operations
  		s.cardToUser(c,user);
   	s.accessRuleToAccessPoint(acc,rule);
   	--s.accessRequest(c,acc);
-  	IO`println("acesso ao dei: ");
   	IO`println(s.accessRequest(c, acc));
 
   );
@@ -195,14 +194,14 @@ operations
    
   public testAll: () ==> ()
   testAll() == (
-   testUser();
+  /* testUser();
    testSystem();
    testUserToGroupUser();
    testSectorToGroupSector();
    testCardToUser();
-   testRuleToAccessPoint(); 
+   testRuleToAccessPoint(); */
    testRequestAccessAllowed();
-    testRequestAccessDenied();
+  --  testRequestAccessDenied();
   
  
   );
